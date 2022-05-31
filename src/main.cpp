@@ -9,7 +9,7 @@ int main(int argc, char** argv)
 
     ImageViewer window {};
     
-    //window.setImage(filename);
+    window.setImage(filename);
 
     window.show_all_children();
 

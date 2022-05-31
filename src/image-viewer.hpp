@@ -10,6 +10,7 @@
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/frame.h>
 #include <gtkmm/image.h>
+#include <gtkmm/viewport.h>
 #include <iostream>
 #include <string>
 
@@ -20,7 +21,10 @@ class DrawingArea : public Gtk::DrawingArea
     protected:
         Glib::RefPtr<Gdk::Pixbuf> m_image;
 
+        double scale;
+
         bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;
+        bool on_scroll_event(GdkEventScroll* ev) override;
 };
 
 class ImageViewer : public Gtk::Window {
