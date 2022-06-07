@@ -283,3 +283,14 @@ void FileHandler::removeFile()
 
     files.erase(files.begin() + tmp_idx);
 }
+
+void helper()
+{
+    std::cerr
+    << "image-viwer version: " << VERSION
+    << std::endl
+    << "Usage: ./image-viwer filenames"
+    << std::endl;
+
+    exit(EXIT_FAILURE);
+}

@@ -1,10 +1,12 @@
 #include "image-viewer.hpp"
 
+
 int main(int argc, char** argv)
 {
-    Glib::RefPtr<Gtk::Application> app = Gtk::Application::create("org.gtkmm.image_viewer");
+    if (argc == 1) helper();
+    else if (!strcmp(argv[1], "--help")) helper();
 
-    std::string filename = argv[1];
+    Glib::RefPtr<Gtk::Application> app = Gtk::Application::create("org.gtkmm.image_viewer");
 
     ImageViewer window(app);
 

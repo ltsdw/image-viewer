@@ -1,4 +1,5 @@
 TARGET=image-viewer
+INSTALL_DIR=/usr/bin
 CXX=g++ -std=++17
 CXXFLAGS="-Wp,-D_GLIBCXX_ASSERTIONS -MMD -lstdc++fs"
 LD=g++
@@ -18,3 +19,11 @@ main.o: $(SRC_DIR)/main.cpp
 image-viewer.o: $(SRC_DIR)/image-viewer.cpp
 	@mkdir -p $(BUILD_DIR)
 	$(CC) -c $(PKGCONFIG) $(SRC_DIR)/image-viewer.cpp -o $(BUILD_DIR)/image-viewer.o $(CXXFLAGS)
+
+install:
+	cp $(BUILD_DIR)/$(TARGET) $(INSTALL_DIR)
+	chmod o+rx $(INSTALL_DIR)/$(TARGET)
+
+uninstall:
+	rm -f $(INSTALL_DIR)/$(TARGET)
+

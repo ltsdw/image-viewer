@@ -17,6 +17,8 @@
 #include <string>
 
 
+#define VERSION "0.0.1"
+
 class FileHandler
 {
     public:
@@ -75,5 +77,13 @@ class ImageViewer : public Gtk::Window {
     private:
         Glib::RefPtr<Gtk::Application> m_app;
 };
+
+/*!
+ * helper
+ *
+ * Displays a helper message.
+ *
+ */
+void helper();
 
 #endif
