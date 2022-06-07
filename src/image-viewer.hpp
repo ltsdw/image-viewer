@@ -11,13 +11,32 @@
 #include <gtkmm/frame.h>
 #include <gtkmm/image.h>
 #include <gtkmm/viewport.h>
+#include <filesystem>
+#include <vector>
 #include <iostream>
 #include <string>
 
-class DrawingArea : public Gtk::DrawingArea 
+
+class FileHandler
 {
     public:
-        DrawingArea();
+        FileHandler(int argc, char** argv);
+
+        std::string next();
+        std::string previous();
+
+        void removeFile();
+
+    private:
+        std::vector<std::string> files;
+
+        int idx;
+};
+
+class DrawingArea : public Gtk::DrawingArea
+{
+    public:
+        DrawingArea(int argc, char** argv, Glib::RefPtr<Gtk::Application> app);
 
         void setImage(const std::string& filename);
 
@@ -29,6 +48,9 @@ class DrawingArea : public Gtk::DrawingArea
         bool reset_flag;
 
         Glib::RefPtr<Gdk::Pixbuf> m_image;
+        Glib::RefPtr<Gtk::Application> m_app;
+
+        FileHandler filehandler;
 
         bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;
         bool on_scroll_event(GdkEventScroll* ev) override;
@@ -43,12 +65,15 @@ class DrawingArea : public Gtk::DrawingArea
 };
 
 class ImageViewer : public Gtk::Window {
-    Gtk::Box m_box;
-
     public:
-        ImageViewer();
+        ImageViewer(Glib::RefPtr<Gtk::Application> app);
 
-        void addToBox(const std::string& filename);
+        Gtk::Box m_box;
+
+        void addToBox(int argc, char** argv);
+
+    private:
+        Glib::RefPtr<Gtk::Application> m_app;
 };
 
 #endif

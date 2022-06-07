@@ -1,6 +1,6 @@
 #include "image-viewer.hpp"
 
-ImageViewer::ImageViewer() : m_box(Gtk::Orientation::ORIENTATION_VERTICAL)
+ImageViewer::ImageViewer(Glib::RefPtr<Gtk::Application> app) : m_box(Gtk::Orientation::ORIENTATION_VERTICAL), m_app{app}
 {
     set_title("Image Viewer");
     set_default_size(500, 500);
@@ -17,15 +17,15 @@ ImageViewer::ImageViewer() : m_box(Gtk::Orientation::ORIENTATION_VERTICAL)
     add(m_box);
 }
 
-void ImageViewer::addToBox(const std::string& filename) {
-    DrawingArea* drawingarea = Gtk::manage(new DrawingArea());
+void ImageViewer::addToBox(int argc, char** argv) {
+    DrawingArea* drawingarea = Gtk::manage(new DrawingArea(argc, argv, m_app));
 
     m_box.pack_start(*drawingarea);
-
-    drawingarea->setImage(filename);
+    
+    drawingarea->setImage(argv[1]);
 }
 
-DrawingArea::DrawingArea()
+DrawingArea::DrawingArea(int argc, char** argv, Glib::RefPtr<Gtk::Application> app) : filehandler{argc, argv}, m_app{app}
 {
     add_events(
             Gdk::BUTTON_PRESS_MASK |
@@ -96,11 +96,34 @@ bool DrawingArea::on_button_release_event(GdkEventButton* ev)
 
 bool DrawingArea::on_key_press_event(GdkEventKey* ev)
 {
-    if (ev->keyval == GDK_KEY_space)
+    switch(ev->keyval)
     {
-        std::cout << "reset" << std::endl;
+        case(GDK_KEY_space):
+            DrawingArea::reset();
 
-        DrawingArea::reset();
+            break;
+        case(GDK_KEY_Left):
+            setImage(filehandler.previous());
+            
+            break;
+        case(GDK_KEY_Right):
+            setImage(filehandler.next());
+
+            break;
+        case(GDK_KEY_x):
+            filehandler.removeFile();
+
+            setImage(filehandler.next());
+
+            break;
+        case(GDK_KEY_Escape):
+            m_app->get_active_window()->hide();
+    
+            break;
+        case(GDK_KEY_q):
+            m_app->get_active_window()->hide();
+
+            break;
     }
 
     return true;
@@ -167,9 +190,11 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
         const int i_width = m_image->get_width();
         const int i_height = m_image->get_height();
 
+        const bool has_alpha = m_image->get_has_alpha();
+
         if (reset_flag) fitImage(w_width, w_height, i_width, i_height);
 
-        Glib::RefPtr<Gdk::Pixbuf> display = Gdk::Pixbuf::create(Gdk::COLORSPACE_RGB, false, 8, w_width, w_height);
+        Glib::RefPtr<Gdk::Pixbuf> display = Gdk::Pixbuf::create(Gdk::COLORSPACE_RGB, has_alpha, 8, w_width, w_height);
 
         const double offset_x = (double)w_width / 2.0 - img_focus_x * scale;
         const double offset_y = (double)w_height / 2.0 - img_focus_y * scale;
@@ -209,10 +234,52 @@ void DrawingArea::setImage(const std::string& filename)
 {
     try
     {
-        m_image = Gdk::Pixbuf::create_from_file(filename);
-    } catch (...)
+        if (m_image) m_image.reset();
+
+        if (!filename.empty()) m_image = Gdk::Pixbuf::create_from_file(filename);
+
+        queue_draw();
+
+    } catch (const Glib::Error& e)
     {
-        std::cerr << "can't load file " << filename << std::endl;
+        std::cerr << e.what() << std::endl;
         return;
     }
+}
+
+FileHandler::FileHandler(int argc, char** argv) : idx{0}
+{
+    for (int i = 1; i < argc; i++) files.push_back(argv[i]);
+}
+
+std::string FileHandler::next()
+{
+    if (!files.size()) return "";
+
+    if (++idx > files.size() - 1) idx = 0;
+
+    return files.at(idx);
+}
+
+std::string FileHandler::previous()
+{
+    if (!files.size()) return "";
+
+    if (--idx < 0) idx = files.size() - 1;
+
+    return files.at(idx);
+}
+
+void FileHandler::removeFile()
+{
+    if (!files.size()) return;
+
+    const int tmp_idx = idx;
+
+    try { std::filesystem::remove(files.at(idx)); }
+    catch(const std::filesystem::filesystem_error& e) { std::cerr << e.what() << std::endl; }
+
+    --idx;
+
+    files.erase(files.begin() + tmp_idx);
 }

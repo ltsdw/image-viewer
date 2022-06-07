@@ -1,6 +1,6 @@
 TARGET=image-viewer
 CXX=g++ -std=++17
-CXXFLAGS="-Wp,-D_GLIBCXX_ASSERTIONS -MMD"
+CXXFLAGS="-Wp,-D_GLIBCXX_ASSERTIONS -MMD -lstdc++fs"
 LD=g++
 PKGCONFIG=`pkg-config gtkmm-3.0 --cflags --libs`
 BUILD_DIR=build
@@ -13,7 +13,7 @@ $(TARGET): $(OBJS)
 	@rm -f $(BUILD_DIR)/{*.o, *.d}
 
 main.o: $(SRC_DIR)/main.cpp
-	$(CC) -c $(CXXFLAGS) $(PKGCONFIG) $(SRC_DIR)/main.cpp -o $(BUILD_DIR)/main.o
+	$(CC) -c $(PKGCONFIG) $(SRC_DIR)/main.cpp -o $(BUILD_DIR)/main.o $(CXXFLAGS)
 
 image-viewer.o: $(SRC_DIR)/image-viewer.cpp
-	$(CC) -c $(CXXFLAGS) $(PKGCONFIG) $(SRC_DIR)/image-viewer.cpp -o $(BUILD_DIR)/image-viewer.o
+	$(CC) -c $(PKGCONFIG) $(SRC_DIR)/image-viewer.cpp -o $(BUILD_DIR)/image-viewer.o $(CXXFLAGS)

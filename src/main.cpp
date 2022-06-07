@@ -1,16 +1,15 @@
 #include "image-viewer.hpp"
 
-
 int main(int argc, char** argv)
 {
-    auto app = Gtk::Application::create("org.gtkmm.image_viewer");
+    Glib::RefPtr<Gtk::Application> app = Gtk::Application::create("org.gtkmm.image_viewer");
 
     std::string filename = argv[1];
 
-    ImageViewer window;
+    ImageViewer window(app);
 
-    //window.resize(600, 600);
-    window.addToBox(filename);
+    window.addToBox(argc, argv);
+
     window.show_all();
 
     return app->run(window);
