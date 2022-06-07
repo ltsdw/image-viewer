@@ -44,13 +44,11 @@ class DrawingArea : public Gtk::DrawingArea
 
 class ImageViewer : public Gtk::Window {
     Gtk::Box m_box;
-    Gtk::Alignment m_alignment;
-    Gtk::Frame m_frame;
 
     public:
         ImageViewer();
 
-        void addToFrame(const std::string& filename);
+        void addToBox(const std::string& filename);
 };
 
 #endif

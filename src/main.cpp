@@ -9,15 +9,9 @@ int main(int argc, char** argv)
 
     ImageViewer window;
 
-    window.resize(600, 600);
-
-    window.addToFrame(filename);
-
-    //window.setImage(filename);
-
+    //window.resize(600, 600);
+    window.addToBox(filename);
     window.show_all();
-
-    //window.show_all_children();
 
     return app->run(window);
 }

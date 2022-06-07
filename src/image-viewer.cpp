@@ -15,17 +15,14 @@ ImageViewer::ImageViewer() : m_box(Gtk::Orientation::ORIENTATION_VERTICAL)
     m_box.set_vexpand(true);
 
     add(m_box);
-
-    //this->signal_key_press_event().connect(sigc::mem_fun(*this, &ImageViewer::onKeyPressed), false);
 }
 
-void ImageViewer::addToFrame(const std::string& filename) {
+void ImageViewer::addToBox(const std::string& filename) {
     DrawingArea* drawingarea = Gtk::manage(new DrawingArea());
 
     m_box.pack_start(*drawingarea);
 
     drawingarea->setImage(filename);
-
 }
 
 DrawingArea::DrawingArea()
@@ -44,8 +41,6 @@ DrawingArea::DrawingArea()
 
     fit();
     move_flag = false;
-
-    //this->signal_key_press_event().connect(sigc::mem_fun(*this, &DrawingArea::onDeleteKeyPress), false);
 }
 
 bool DrawingArea::on_scroll_event(GdkEventScroll* ev)
@@ -149,7 +144,7 @@ void DrawingArea::fit()
     queue_draw();
 }
 
-void DrawingArea::fitImage(const int w_width, const int w_height,const int i_width, const int i_height)
+void DrawingArea::fitImage( int w_width,  int w_height, int i_width,  int i_height)
 {
     const double w_ratio = (double) w_width / w_height;
     const double i_ratio = (double) i_width / i_height;
@@ -179,10 +174,10 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
         const double offset_x = (double)w_width / 2.0 - img_focus_x * scale;
         const double offset_y = (double)w_height / 2.0 - img_focus_y * scale;
 
-        const double min_x = std::max(0., offset_x);
-        const double min_y = std::max(0., offset_y);
+        const double min_x = std::max(0.0, offset_x);
+        const double min_y = std::max(0.0, offset_y);
         const double max_x = std::min((double)w_width, (double)w_width / 2 + (i_width - img_focus_x) * scale);
-        const double max_y = std::min((double)w_width, (double)w_width / 2 + (i_height - img_focus_y) * scale);
+        const double max_y = std::min((double)w_height, (double)w_height / 2 + (i_height - img_focus_y) * scale);
 
         const double width = max_x - min_x;
         const double height = max_y - min_y;
