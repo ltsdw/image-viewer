@@ -5,13 +5,19 @@ int main(int argc, char** argv)
 {
     auto app = Gtk::Application::create("org.gtkmm.image_viewer");
 
-    std::string filename = "/tmp/example.png";
+    std::string filename = argv[1];
 
-    ImageViewer window {};
-    
-    window.setImage(filename);
+    ImageViewer window;
 
-    window.show_all_children();
+    window.resize(600, 600);
+
+    window.addToFrame(filename);
+
+    //window.setImage(filename);
+
+    window.show_all();
+
+    //window.show_all_children();
 
     return app->run(window);
 }

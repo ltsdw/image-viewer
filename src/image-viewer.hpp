@@ -17,14 +17,29 @@
 class DrawingArea : public Gtk::DrawingArea 
 {
     public:
-        DrawingArea(const std::string& filename);
-    protected:
-        Glib::RefPtr<Gdk::Pixbuf> m_image;
+        DrawingArea();
 
+        void setImage(const std::string& filename);
+
+    private:
         double scale;
+        double img_focus_x, img_focus_y;
+        double last_x_mouse, last_y_mouse;
+        bool move_flag;
+        bool reset_flag;
+
+        Glib::RefPtr<Gdk::Pixbuf> m_image;
 
         bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;
         bool on_scroll_event(GdkEventScroll* ev) override;
+        bool on_button_press_event(GdkEventButton* ev) override;
+        bool on_button_release_event(GdkEventButton* ev) override;
+        bool on_key_press_event(GdkEventKey* ev) override;
+        bool on_motion_notify_event(GdkEventMotion* ev) override;
+
+        void fitImage(const int w_width, const int w_height, const int i_width, const int i_height);
+        void fit();
+        void reset();
 };
 
 class ImageViewer : public Gtk::Window {
@@ -35,7 +50,7 @@ class ImageViewer : public Gtk::Window {
     public:
         ImageViewer();
 
-        void setImage(const std::string& filename);
+        void addToFrame(const std::string& filename);
 };
 
 #endif
