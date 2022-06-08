@@ -236,7 +236,7 @@ void DrawingArea::setImage(const std::string& filename)
     {
         if (m_image) m_image.reset();
 
-        if (!filename.empty()) m_image = Gdk::Pixbuf::create_from_file(filename);
+        if (not filename.empty()) m_image = Gdk::Pixbuf::create_from_file(filename);
 
         queue_draw();
 
@@ -254,7 +254,7 @@ FileHandler::FileHandler(int argc, char** argv) : idx{0}
 
 std::string FileHandler::next()
 {
-    if (!files.size()) return "";
+    if (not files.size()) return "";
 
     if (++idx > files.size() - 1) idx = 0;
 
@@ -263,7 +263,7 @@ std::string FileHandler::next()
 
 std::string FileHandler::previous()
 {
-    if (!files.size()) return "";
+    if (not files.size()) return "";
 
     if (--idx < 0) idx = files.size() - 1;
 
@@ -272,7 +272,7 @@ std::string FileHandler::previous()
 
 void FileHandler::removeFile()
 {
-    if (!files.size()) return;
+    if (not files.size()) return;
 
     const int tmp_idx = idx;
 
