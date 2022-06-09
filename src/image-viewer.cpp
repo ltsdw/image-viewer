@@ -247,7 +247,7 @@ void DrawingArea::setImage(const std::string& filename)
     }
 }
 
-FileHandler::FileHandler(int argc, char** argv) : idx{0}
+FileHandler::FileHandler(int argc, char** argv)
 {
     for (int i = 1; i < argc; i++) files.push_back(argv[i]);
 }
