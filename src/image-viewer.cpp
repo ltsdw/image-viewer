@@ -114,7 +114,7 @@ bool DrawingArea::on_key_press_event(GdkEventKey* ev)
 
             setImage(filehandler.next());
 
-            // certifies that after the last image is deleted
+            // certifies that after the last image is removed
             // it will redraw, otherwise the image would still be displayed
             queue_draw();
 
