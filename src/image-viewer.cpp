@@ -39,8 +39,6 @@ DrawingArea::DrawingArea(int argc, char** argv, Glib::RefPtr<Gtk::Application> a
 
     set_can_focus();
 
-    fit();
-
     move_flag = false;
 }
 
@@ -240,6 +238,8 @@ void DrawingArea::setImage(const std::string& filename)
         if (not filename.empty()) 
         {
             m_image = Gdk::Pixbuf::create_from_file(filename);
+
+            fit();
 
             queue_draw();
         }
