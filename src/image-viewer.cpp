@@ -240,8 +240,6 @@ void DrawingArea::setImage(const std::string& filename)
             m_image = Gdk::Pixbuf::create_from_file(filename);
 
             fit();
-
-            queue_draw();
         }
 
     } catch (const Glib::Error& e)
