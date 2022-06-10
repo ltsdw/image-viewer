@@ -1,6 +1,7 @@
 #ifndef IMAGE_VIEWER
 #define IMAGE_VIEWER
 
+
 #include <gdkmm/pixbuf.h>
 #include <gdkmm/general.h>
 #include <gtkmm/window.h>
@@ -18,6 +19,7 @@
 
 
 #define VERSION "0.0.1"
+
 
 class FileHandler
 {

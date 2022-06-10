@@ -21,11 +21,9 @@ void ImageViewer::addToBox(int argc, char** argv) {
     DrawingArea* drawingarea = Gtk::manage(new DrawingArea(argc, argv, m_app));
 
     m_box.pack_start(*drawingarea);
-    
-    drawingarea->setImage(argv[1]);
 }
 
-DrawingArea::DrawingArea(int argc, char** argv, Glib::RefPtr<Gtk::Application> app) : filehandler{argc, argv}, m_app{app}
+DrawingArea::DrawingArea(int argc, char** argv, Glib::RefPtr<Gtk::Application> app) : m_app{app}, filehandler{argc, argv}
 {
     add_events(
             Gdk::BUTTON_PRESS_MASK |
@@ -37,9 +35,12 @@ DrawingArea::DrawingArea(int argc, char** argv, Glib::RefPtr<Gtk::Application> a
             Gdk::POINTER_MOTION_MASK
     );
 
+    setImage(filehandler.next());
+
     set_can_focus();
 
     fit();
+
     move_flag = false;
 }
 
@@ -247,9 +248,21 @@ void DrawingArea::setImage(const std::string& filename)
     }
 }
 
-FileHandler::FileHandler(int argc, char** argv)
+FileHandler::FileHandler(int argc, char** argv) : idx{-1}
 {
-    for (int i = 1; i < argc; i++) files.push_back(argv[i]);
+    for (int i = 1; i < argc; i++)
+    {
+        if (std::filesystem::is_directory(argv[i]))
+        {
+            for (const std::filesystem::directory_entry& dir_entry : std::filesystem::recursive_directory_iterator(argv[i]))
+            {
+                if (std::filesystem::is_regular_file(dir_entry)) files.push_back(dir_entry.path());
+            }
+        } else
+        {
+            files.push_back(argv[i]);
+        }
+    }
 }
 
 std::string FileHandler::next()
