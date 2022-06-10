@@ -237,13 +237,21 @@ void DrawingArea::setImage(const std::string& filename)
     {
         if (m_image) m_image.reset();
 
-        if (not filename.empty()) m_image = Gdk::Pixbuf::create_from_file(filename);
+        if (not filename.empty()) 
+        {
+            m_image = Gdk::Pixbuf::create_from_file(filename);
 
-        queue_draw();
+            queue_draw();
+        }
 
     } catch (const Glib::Error& e)
     {
         std::cerr << e.what() << std::endl;
+
+        filehandler.removeFile(false);
+
+        setImage(filehandler.next());
+
         return;
     }
 }
@@ -263,6 +271,9 @@ FileHandler::FileHandler(int argc, char** argv) : idx{-1}
             files.push_back(argv[i]);
         }
     }
+
+    sort(files.begin(), files.end());
+
 }
 
 std::string FileHandler::next()
@@ -283,14 +294,16 @@ std::string FileHandler::previous()
     return files.at(idx);
 }
 
-void FileHandler::removeFile()
+void FileHandler::removeFile(const bool delete_file)
 {
     if (not files.size()) return;
 
     const int tmp_idx = idx;
 
-    try { std::filesystem::remove(files.at(idx)); }
-    catch(const std::filesystem::filesystem_error& e) { std::cerr << e.what() << std::endl; }
+    if (delete_file) {
+        try { std::filesystem::remove(files.at(idx)); }
+        catch(const std::filesystem::filesystem_error& e) { std::cerr << e.what() << std::endl; }
+    }
 
     --idx;
 

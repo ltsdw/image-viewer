@@ -29,7 +29,16 @@ class FileHandler
         std::string next();
         std::string previous();
 
-        void removeFile();
+        /*!
+         * removeFile
+         *
+         * param delete_file: if true will actually delete the file
+         * otherwise will only remove the filename from the vector.
+         * Defaults to true.
+         *
+         * Removes the filename and delete it if delete_file is true.
+        */
+        void removeFile(const bool delete_file=true);
 
     private:
         std::vector<std::string> files;
