@@ -114,6 +114,10 @@ bool DrawingArea::on_key_press_event(GdkEventKey* ev)
 
             setImage(filehandler.next());
 
+            // certifies that after the last image is deleted
+            // it will redraw, otherwise the image would still be displayed
+            queue_draw();
+
             break;
         case(GDK_KEY_Escape):
             m_app->get_active_window()->hide();
@@ -296,16 +300,16 @@ void FileHandler::removeFile(const bool delete_file)
 {
     if (not files.size()) return;
 
-    const int tmp_idx = idx;
-
-    if (delete_file) {
+    if (delete_file) 
+    {
         try { std::filesystem::remove(files.at(idx)); }
         catch(const std::filesystem::filesystem_error& e) { std::cerr << e.what() << std::endl; }
     }
 
-    --idx;
 
-    files.erase(files.begin() + tmp_idx);
+    files.erase(files.begin() + idx);
+
+    --idx;
 }
 
 void helper()
