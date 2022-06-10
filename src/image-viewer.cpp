@@ -112,7 +112,7 @@ bool DrawingArea::on_key_press_event(GdkEventKey* ev)
 
             break;
         case(GDK_KEY_x):
-            filehandler.removeFile();
+            filehandler.removeFile(true);
 
             setImage(filehandler.next());
 
@@ -248,7 +248,7 @@ void DrawingArea::setImage(const std::string& filename)
     {
         std::cerr << e.what() << std::endl;
 
-        filehandler.removeFile(false);
+        filehandler.removeFile();
 
         setImage(filehandler.next());
 
