@@ -7,7 +7,7 @@ int main(int argc, char** argv)
 
     Glib::RefPtr<Gtk::Application> app = Gtk::Application::create("org.gtkmm.image_viewer");
 
-    ImageViewer window(app);
+    ImageViewer window;
 
     window.addToBox(argc, argv);
 
