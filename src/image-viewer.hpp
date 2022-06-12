@@ -91,7 +91,7 @@ class DrawingArea : public Gtk::DrawingArea
         bool m_move_flag;
         bool m_reset_flag;
         bool m_is_click_released;
-        bool m_is_click_holded;
+        bool m_is_click_held;
 
         FileHandler m_filehandler;
 

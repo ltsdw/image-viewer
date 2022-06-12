@@ -29,7 +29,7 @@ void ImageViewer::addToBox(int argc, char** argv) {
 DrawingArea::DrawingArea(int argc, char** argv) :
     m_move_flag(false),
     m_is_click_released(true),
-    m_is_click_holded(false),
+    m_is_click_held(false),
     m_filehandler(argc, argv)
 {
     add_events(
@@ -86,10 +86,10 @@ bool DrawingArea::on_button_press_event(GdkEventButton* ev)
 
 bool DrawingArea::on_button_release_event(GdkEventButton* ev)
 {
-    if (ev->button == 1 and m_move_flag and m_is_click_holded)
+    if (ev->button == 1 and m_move_flag and m_is_click_held)
     {
         m_move_flag = false;
-        m_is_click_holded = false;
+        m_is_click_held = false;
         m_is_click_released = true;
 
         if (m_conn.connected()) m_conn.disconnect();
@@ -102,7 +102,7 @@ bool DrawingArea::on_button_release_event(GdkEventButton* ev)
         return true;
     } else if (ev->button == 1) 
     {
-        m_is_click_holded = false;
+        m_is_click_held = false;
         m_is_click_released = true;
 
         if (m_conn.connected()) m_conn.disconnect();
@@ -156,7 +156,7 @@ bool DrawingArea::on_key_press_event(GdkEventKey* ev)
 
 bool DrawingArea::on_motion_notify_event(GdkEventMotion* ev)
 {
-    if (m_move_flag and m_is_click_holded)
+    if (m_move_flag and m_is_click_held)
     {
         const int x_mouse = ev->x;
         const int y_mouse = ev->y;
@@ -183,7 +183,7 @@ bool DrawingArea::onTimeoutSetClickHold(const double x_mouse, const double y_mou
 
         m_move_flag = true;
 
-        m_is_click_holded = true;
+        m_is_click_held = true;
     }
 
     return false;
