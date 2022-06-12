@@ -66,8 +66,12 @@ bool DrawingArea::on_scroll_event(GdkEventScroll* ev)
 
 bool DrawingArea::on_button_press_event(GdkEventButton* ev)
 {
+    std::cout << ev->button << std::endl;
+
     if (ev->button == 1)
     {
+        std::cout << "touchpad" << std::endl;
+
         m_is_click_released = false;
 
         const sigc::slot<bool ()> slot = sigc::bind(
@@ -76,7 +80,7 @@ bool DrawingArea::on_button_press_event(GdkEventButton* ev)
             ev->y
         );
 
-        m_conn = Glib::signal_timeout().connect(slot, 150);
+        m_conn = Glib::signal_timeout().connect(slot, 180);
 
         return true;
     }
@@ -86,6 +90,12 @@ bool DrawingArea::on_button_press_event(GdkEventButton* ev)
 
 bool DrawingArea::on_button_release_event(GdkEventButton* ev)
 {
+    std::cout << "release " << ev->button << std::endl;
+
+    std::cout << "move flag " << m_move_flag << std::endl;
+
+    std::cout << "m_is_click_holded " << m_is_click_holded << std::endl;
+
     if (ev->button == 1 and m_move_flag and m_is_click_holded)
     {
         m_move_flag = false;
@@ -102,11 +112,14 @@ bool DrawingArea::on_button_release_event(GdkEventButton* ev)
         return true;
     } else if (ev->button == 1) 
     {
+        std::cout << "release setnext" << ev->button << std::endl;
+
         m_is_click_holded = false;
         m_is_click_released = true;
 
         if (m_conn.connected()) m_conn.disconnect();
 
+        std::cout << "release setnext" << ev->button << std::endl;
         setImage(m_filehandler.next());
 
         return true;
