@@ -66,6 +66,8 @@ bool DrawingArea::on_scroll_event(GdkEventScroll* ev)
 
 bool DrawingArea::on_button_press_event(GdkEventButton* ev)
 {
+    std::cout << ev->button << std::endl;
+
     if (ev->button == 1)
     {
         m_is_click_released = false;
@@ -76,7 +78,7 @@ bool DrawingArea::on_button_press_event(GdkEventButton* ev)
             ev->y
         );
 
-        m_conn = Glib::signal_timeout().connect(slot, 150);
+        m_conn = Glib::signal_timeout().connect(slot, 180);
 
         return true;
     }
