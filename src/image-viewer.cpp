@@ -66,8 +66,6 @@ bool DrawingArea::on_scroll_event(GdkEventScroll* ev)
 
 bool DrawingArea::on_button_press_event(GdkEventButton* ev)
 {
-    std::cout << ev->button << std::endl;
-
     if (ev->button == 1)
     {
         m_is_click_released = false;
